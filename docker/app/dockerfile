@@ -30,4 +30,4 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# La ultima linea evita que Nginx corra como daemon mandandose al fondo, si no la agrego Nginx va a correr en el fondo(cosa que a Docker no posible gusta) haciendo que el proceso muera inmediatamente
+# La ultima linea evita que Nginx corra como daemon mandandose al fondo, si no la agrego Nginx va a correr en el fondo(cosa que a Docker no le gusta) haciendo que el proceso muera inmediatamente
