@@ -31,3 +31,6 @@ RUN apt-get update \
     && echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # La ultima linea evita que Nginx corra como daemon mandandose al fondo, si no la agrego Nginx va a correr en el fondo(cosa que a Docker no le gusta) haciendo que el proceso muera inmediatamente
+
+# Agrego la configuracion de Nginx que esta en el mismo nivel que el dockerfile
+ADD default /etc/nginx/sites-available/default
