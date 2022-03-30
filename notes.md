@@ -13,10 +13,11 @@
 * docker rm <container-id-here>
   * elimina el contenedor asociado a la ID dada, siempre y cuando no esté corriendo, para detenerlo usar el comando de arriba
 
-* docker run --rm -it ubuntu:20.04 bash
+* docker run --rm -it -p 8080:80 ubuntu:20.04 bash
   * docker run: instancia y ejecuta una imagen, la descarga si no estaba presente
   * --rm: cuando se termina el proceso a ejecutar elimina el contenedor
   * -it(o -i -t): hace que la ejecución sea interactiva, se pueden meter comandos desde la consola, para que la ejecucion pase al fondo(background), usar -d
+  * -p 8080:80: expone el puerto 8080 en el localhost(puedo acceder al contenedor desde localhost:8080), lo que se haga en este se va a enviar al puerto interno 80 del contenedor
   * ubuntu:20.04: imagen a usar y su tag correspondiente
   * bash: proceso a correr en el contenedor
 
