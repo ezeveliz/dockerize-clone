@@ -44,5 +44,9 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Agrego la configuracion de php para evitar que el mismo se auto daemonice y que supervisord le pierda el rastro
 ADD php-fpm.conf /etc/php/7.4/fpm/php-fpm.conf
 
-# Comando por default a ejecutar cuando ejecuto el contenedor
-CMD ["supervisord"]
+# Agrego el script start-container al path del contenedor y lo hago ejecutable
+ADD start-container.sh /usr/bin/start-container
+RUN chmod +x /usr/bin/start-container
+
+# Ejecuto un script cuando se inicializa el contenedor, lo que se pase como parametro(desde docker run...) se va a pasar a este script
+ENTRYPOINT ["start-container"]
