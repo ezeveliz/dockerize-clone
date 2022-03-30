@@ -35,6 +35,9 @@
   * -f docker/app/dockerfile: ubicacion del dockerfile
   * docker/app: contexto donde se va a encontrar lo que va a correr en el contenedor
 
+* docker logs -f <container-id-here>
+  * muestra por pantalla los logs generados por el contenedor asociado a la ID dada
+  * -f: sigue los logs, a medida que se van generando los va agregando
 
 ## Extra
 
