@@ -14,7 +14,7 @@ RUN apt-get update \
     && echo "UTC" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
 
-# Instalo PHP, Composer, Nginx y sqlite 3 y luego limpio
+# Instalo PHP, Composer, Nginx, supervisor(monitor de procesos que permite iniciar varios procesos y asegurarse de que se queden vivos) y sqlite 3 y luego limpio
 RUN apt-get update \
     && apt-get install -y curl zip unzip git supervisor sqlite3 \
        nginx php7.4-fpm php7.4-cli \
@@ -34,3 +34,9 @@ RUN apt-get update \
 
 # Agrego la configuracion de Nginx que esta en el mismo nivel que el dockerfile
 ADD default /etc/nginx/sites-available/default
+
+# Agrego la configuracion de supervisor al directorio de configuracion de supervisor para que ejecute php y nginx automaticamente
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Comando por default a ejecutar cuando ejecuto el contenedor
+CMD ["supervisord"]
