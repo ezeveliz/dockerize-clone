@@ -8,6 +8,11 @@
 * docker image rm image:tag
   * Elimina la imagen image:tag
 
+* docker stop <container-id-here>
+  * detiene el contenedor asociado a la ID dada
+* docker rm <container-id-here>
+  * elimina el contenedor asociado a la ID dada, siempre y cuando no esté corriendo, para detenerlo usar el comando de arriba
+
 * docker run --rm -it ubuntu:20.04 bash
   * docker run: instancia y ejecuta una imagen, la descarga si no estaba presente
   * --rm: cuando se termina el proceso a ejecutar elimina el contenedor
