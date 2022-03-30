@@ -13,7 +13,7 @@
 * docker rm <container-id-here>
   * elimina el contenedor asociado a la ID dada, siempre y cuando no esté corriendo, para detenerlo usar el comando de arriba
 
-* docker run --rm --name=<container-name> -e <env-var-name>=<env-var-value> -it -p 8080:80 -v $(pwd)/application:/var/www/html/public ubuntu:20.04 bash
+* docker run --rm --name=<container-name> -e <env-var-name>=<env-var-value> -it -p 8080:80 -v $(pwd)/application:/var/www/html/public -w /di/rec/to/ry ubuntu:20.04 bash
   * docker run: instancia y ejecuta una imagen, la descarga si no estaba presente
   * --rm: cuando se termina el proceso a ejecutar elimina el contenedor
   * --name=<container-name>: le asigno un nombre al contenedor a ejecutar para poder referenciarlo por el mismo
@@ -22,6 +22,7 @@
   * -v $(pwd)/application:/var/www/html/public: comparte un volumen(un directorio) al directorio indicado dentro del contenedor
     * $(pwd)/application: esta primera parte genera la ruta al directorio en el que estoy ejecutando el comando + /application
     * /var/www/html/public: esta segunda parte indica a donde quiero colocar el volumen indicado por la primera parte dentro del contenedor
+  * -w /di/rec/to/ry: setea el directorio en el que voy a ejecutar la orden que se va a pasar por parametro en este caso /di/rec/to/ry 
   * -e <env-var-name>=<env-var-value>: define una variable de entorno para pasarle al contenedor, se pueden agregar multiples agregando un -e por delante de cada una
   * ubuntu:20.04: imagen a usar y su tag correspondiente
   * bash: proceso a correr en el contenedor
