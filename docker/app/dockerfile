@@ -15,6 +15,7 @@ RUN apt-get update \
     && dpkg-reconfigure -f noninteractive tzdata
 
 # Instalo PHP, Composer, Nginx, supervisor(monitor de procesos que permite iniciar varios procesos y asegurarse de que se queden vivos) y sqlite 3 y luego limpio
+# La ultima linea evita que Nginx corra como daemon mandandose al fondo, si no la agrego Nginx va a correr en el fondo(cosa que a Docker no le gusta) haciendo que el proceso muera inmediatamente
 RUN apt-get update \
     && apt-get install -y curl zip unzip git supervisor sqlite3 \
        nginx php7.4-fpm php7.4-cli \
@@ -30,7 +31,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# La ultima linea evita que Nginx corra como daemon mandandose al fondo, si no la agrego Nginx va a correr en el fondo(cosa que a Docker no le gusta) haciendo que el proceso muera inmediatamente
+# Hago un symlink de stdout y stderr en nginx(donde nginx loggea errores y logs) para que supervisor los pueda ver ya que es ahi donde los está esperando
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Agrego la configuracion de Nginx que esta en el mismo nivel que el dockerfile
 ADD default /etc/nginx/sites-available/default
