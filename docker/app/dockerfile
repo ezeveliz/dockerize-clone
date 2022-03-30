@@ -38,5 +38,8 @@ ADD default /etc/nginx/sites-available/default
 # Agrego la configuracion de supervisor al directorio de configuracion de supervisor para que ejecute php y nginx automaticamente
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Agrego la configuracion de php para evitar que el mismo se auto daemonice y que supervisord le pierda el rastro
+ADD php-fpm.conf /etc/php/7.4/fpm/php-fpm.conf
+
 # Comando por default a ejecutar cuando ejecuto el contenedor
 CMD ["supervisord"]
