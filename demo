@@ -113,7 +113,7 @@ install_script () {
     echo 'export HOST_UID=$(id -u)'
     echo "$inicio$path$fin"
 
-    printf "\nAhora cerra la terminal y volvé a abrirla para continuar"
+    printf "\nAhora cerra la terminal y volvé a abrirla y ejecutá \"demo init\" para continuar"
 }
 
 #######################################
