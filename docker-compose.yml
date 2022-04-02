@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./src/backend:/var/www/backend
+      - "./src/${BACKEND_REPO}:/var/www/backend"
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
       - phpmyadmindata:/var/www/phpmyadmin
     depends_on:
@@ -18,12 +18,12 @@ services:
 
   backend:
     build:
-      context: ./src/backend
+      context: "./src/${BACKEND_REPO}"
       args:
         HOST_UID: $HOST_UID
     working_dir: /var/www/backend
     volumes:
-      - ./src/backend:/var/www/backend
+      - "./src/${BACKEND_REPO}:/var/www/backend"
       - ./.docker/backend/init:/opt/files/init
     depends_on:
       mysql:

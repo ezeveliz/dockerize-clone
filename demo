@@ -46,12 +46,24 @@ env () {
     fi
 }
 
+# Clone or update the repositories
+repositories () {
+    repos=(dockerized-arbil)
+    cd src || exit
+    for repo in "${repos[@]}";
+    do
+        git clone "https://github.com/ezeveliz/${repo}.git" "$repo" || (cd "$repo" ; git pull ; cd ..) || true
+    done
+    cd ..
+}
+
 # Initialise the Docker environment and the application
 init () {
 
     # El script init SOLO se ejecuta durante la ejecución de esta función
 
-    env \
+    repositories \
+        && env \
         && down -v \
         && build \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
@@ -67,8 +79,8 @@ logs () {
 # Restart the containers
 restart () {
 
-    # docker-compose restart solo reinicia los contenedores en ejecución,
-    # pero si hubo cambios en las imágenes no los actualiza
+    # docker-compose restart solo reinicia los contenedores en ejecución utilizando la misma imagen,
+    # pero si hubo cambios en las mismas no los actualiza
     stop && start
 }
 
@@ -84,7 +96,9 @@ stop () {
 
 # Update the Docker environment
 update () {
-    git pull \
+
+    repositories \
+        && git pull \
         && build \
         && composer install \
         && artisan migrate \
