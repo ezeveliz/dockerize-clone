@@ -1,8 +1,0 @@
-FROM node:17-alpine
-
-ARG HOST_UID
-# Cambio al usuario creado(para que no ejecute como root)
-USER $HOST_UID
-
-# Start application
-CMD ["yarn", "dev"]
