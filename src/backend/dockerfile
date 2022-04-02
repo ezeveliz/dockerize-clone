@@ -1,0 +1,23 @@
+FROM php:8.1-fpm-alpine
+
+# Instalo extensiones
+RUN docker-php-ext-install pdo_mysql bcmath
+
+# Instalo composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+# Configuro PHP(opcache)
+COPY .docker/php.ini $PHP_INI_DIR/conf.d/opcache.ini
+
+# Use the default development configuration
+RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+
+# Instalo Bash
+RUN apk --no-cache add bash
+
+# Creo un usuario demo con la HOST_UID dada
+ARG HOST_UID
+RUN adduser --disabled-password --gecos "" --uid $HOST_UID demo
+
+# Cambio al usuario creado(para que no ejecute como root)
+USER demo

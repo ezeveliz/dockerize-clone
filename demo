@@ -1,0 +1,187 @@
+#!/bin/bash
+
+# Define Docker Compose command prefix...
+if [ -x "$(command -v docker-compose)" ]; then
+    DOCKER_COMPOSE=(docker-compose)
+else
+    DOCKER_COMPOSE=(docker compose)
+fi
+
+
+#######################################
+# FUNCTIONS
+#######################################
+
+# Run an Artisan command
+artisan () {
+    "${DOCKER_COMPOSE[@]}" run --rm backend php artisan "${@:1}"
+}
+
+# Build all of the images or the specified one
+build () {
+    "${DOCKER_COMPOSE[@]}" build "${@:1}"
+}
+
+# Run a Composer command
+composer () {
+    "${DOCKER_COMPOSE[@]}" run --rm backend composer "${@:1}"
+}
+
+# Remove the entire Docker environment
+destroy () {
+    read -p "This will delete containers, volumes and images. Are you sure? [y/N]: " -r
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
+    "${DOCKER_COMPOSE[@]}" down -v --rmi all --remove-orphans
+}
+
+# Stop and destroy all containers
+down () {
+    "${DOCKER_COMPOSE[@]}" down "${@:1}"
+}
+
+# Create .env from .env.example
+env () {
+    if [ ! -f .env ]; then
+        cp .env.example .env
+    fi
+}
+
+# Initialise the Docker environment and the application
+init () {
+
+    # El script init SOLO se ejecuta durante la ejecución de esta función
+
+    env \
+        && down -v \
+        && build \
+        && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
+        && yarn install \
+        && start
+}
+
+# Display and tail the logs of all containers or the specified one's
+logs () {
+    "${DOCKER_COMPOSE[@]}" logs -f "${@:1}"
+}
+
+# Restart the containers
+restart () {
+
+    # docker-compose restart solo reinicia los contenedores en ejecución,
+    # pero si hubo cambios en las imágenes no los actualiza
+    stop && start
+}
+
+# Start the containers
+start () {
+    "${DOCKER_COMPOSE[@]}" up -d
+}
+
+# Stop the containers
+stop () {
+    "${DOCKER_COMPOSE[@]}" stop
+}
+
+# Update the Docker environment
+update () {
+    git pull \
+        && build \
+        && composer install \
+        && artisan migrate \
+        && yarn install \
+        && start
+}
+
+# Run a Yarn command
+yarn () {
+    "${DOCKER_COMPOSE[@]}" run --rm frontend yarn "${@:1}"
+}
+
+# Imprimo lineas a agregar al archivo ~./bashrc
+install_script () {
+
+    path=$(pwd)
+
+    inicio='function demo {
+      cd '
+    fin=' && bash demo $*
+      cd -
+      }'
+
+    printf "Copia las lineas que aparecen a continuación y agregalas al final del archivo ~/.bashrc para que demo esté disponible desde cualquier lugar\n\n"
+
+    echo 'export HOST_UID=$(id -u)'
+    echo "$inicio$path$fin"
+
+    printf "\nAhora cerra la terminal y volvé a abrirla para continuar"
+}
+
+#######################################
+# MENU
+#######################################
+
+case "$1" in
+    artisan)
+        artisan "${@:2}"
+        ;;
+    build)
+        build "${@:2}"
+        ;;
+    composer)
+        composer "${@:2}"
+        ;;
+    destroy)
+        destroy
+        ;;
+    down)
+        down "${@:2}"
+        ;;
+    init)
+        init
+        ;;
+    logs)
+        logs "${@:2}"
+        ;;
+    restart)
+        restart
+        ;;
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    update)
+        update
+        ;;
+    yarn)
+        yarn "${@:2}"
+        ;;
+    install-script)
+        install_script
+        ;;
+    *)
+        cat << EOF
+Command line interface for the Docker-based web development environment demo.
+Usage:
+    demo <command> [options] [arguments]
+Available commands:
+    artisan ................................... Run an Artisan command
+    build [image] ............................. Build all of the images or the specified one
+    composer .................................. Run a Composer command
+    destroy ................................... Remove the entire Docker environment
+    down [-v] ................................. Stop and destroy all containers
+                                                Options:
+                                                    -v .................... Destroy the volumes as well
+    init ...................................... Initialise the Docker environment and the application
+    logs [container] .......................... Display and tail the logs of all containers or the specified one's
+    restart ................................... Restart the containers
+    start ..................................... Start the containers
+    stop ...................................... Stop the containers
+    update .................................... Update the Docker environment
+    yarn ...................................... Run a Yarn command
+    install-script ............................ Print commands to install demo script
+EOF
+        exit
+        ;;
+esac
