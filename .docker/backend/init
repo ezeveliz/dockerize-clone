@@ -38,4 +38,6 @@ EOF
 fi
 
 # Ejecuto la migración
-php "/var/www/backend/artisan" migrate
+# /usr/bin/psql --file=/var/www/backend/Demo_DB.sql --username=arbil --host=postgres --port=5432 arbil
+
+# php "/var/www/backend/artisan" migrate

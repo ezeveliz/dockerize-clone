@@ -30,7 +30,7 @@ services:
 
   frontend:
     build:
-      context: "./src/${BACKEND_REPO}/frontend"
+      context: "./src/${BACKEND_REPO}/.dck.frontend"
       args:
         HOST_UID: $HOST_UID
     working_dir: /var/www/backend
@@ -40,16 +40,20 @@ services:
       - backend
 
   postgres:
-    image: postgres:12-alpine
+    build:
+      context: "./src/${BACKEND_REPO}/.dck.db"
+    working_dir: /var/www/backend
     restart: unless-stopped
+    ports:
+      - 5433:5432
     environment:
       POSTGRES_PASSWORD: 2522
-      POSTGRES_DB: arbil
+      POSTGRES_DB: dummy-db
       POSTGRES_USER: arbil
     volumes:
       - pgsqldata:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U arbil" ]
       interval: 10s
       timeout: 5s
       retries: 5
