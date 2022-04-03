@@ -67,7 +67,7 @@ init () {
         && down -v \
         && build \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
-        && yarn install \
+        && npm install \
         && start
 }
 
@@ -102,13 +102,13 @@ update () {
         && build \
         && composer install \
         && artisan migrate \
-        && yarn install \
+        && npm install \
         && start
 }
 
-# Run a Yarn command
-yarn () {
-    "${DOCKER_COMPOSE[@]}" run --rm frontend yarn "${@:1}"
+# Run a npm command
+npm () {
+    "${DOCKER_COMPOSE[@]}" run --rm frontend npm "${@:1}"
 }
 
 # Imprimo lineas a agregar al archivo ~./bashrc
@@ -127,7 +127,7 @@ install_script () {
     echo 'export HOST_UID=$(id -u)'
     echo "$inicio$path$fin"
 
-    printf "\nAhora cerra la terminal y volvé a abrirla y ejecutá \"demo init\" para continuar"
+    printf "\nAhora guarda los cambios, cerra el archivo ~/.bashrc y la terminal, luego volvé a abrirla y ejecutá \"demo init\" para continuar"
 }
 
 #######################################
@@ -168,8 +168,8 @@ case "$1" in
     update)
         update
         ;;
-    yarn)
-        yarn "${@:2}"
+    npm)
+        npm "${@:2}"
         ;;
     install-script)
         install_script
@@ -193,7 +193,7 @@ Available commands:
     start ..................................... Start the containers
     stop ...................................... Stop the containers
     update .................................... Update the Docker environment
-    yarn ...................................... Run a Yarn command
+    npm ....................................... Run a npm command
     install-script ............................ Print commands to install demo script
 EOF
         exit
