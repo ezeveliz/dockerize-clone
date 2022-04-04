@@ -48,11 +48,16 @@ env () {
 
 # Clone or update the repositories
 repositories () {
-    repos=(dockerized-arbil)
+    repos=(arbil)
     cd src || exit
     for repo in "${repos[@]}";
     do
-        git clone "https://github.com/ezeveliz/${repo}.git" "$repo" || (cd "$repo" ; git pull ; cd ..) || true
+        # Solo clono si no existía
+        if [ ! -d "$repo" ]; then
+          (git clone "https://github.com/ezeveliz/${repo}.git" "$repo"; cd "$repo" ; git checkout develop ; cd ..) || true
+        else
+          (cd "$repo" ; git checkout develop ; git fetch ; cd ..) || true
+        fi
     done
     cd ..
 }
@@ -67,7 +72,7 @@ init () {
         && down -v \
         && build \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
-        && npm install \
+        && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" frontend \
         && start
 }
 

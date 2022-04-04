@@ -36,8 +36,7 @@ services:
     working_dir: /var/www/backend
     volumes:
       - "./src/${BACKEND_REPO}:/var/www/backend"
-    depends_on:
-      - backend
+      - ./.docker/frontend/init:/opt/files/init
 
   postgres:
     build:
