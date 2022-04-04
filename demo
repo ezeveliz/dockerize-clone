@@ -22,6 +22,37 @@ build () {
     "${DOCKER_COMPOSE[@]}" build "${@:1}"
 }
 
+# Generate a wildcard certificate
+cert_generate() {
+
+  # Elimino certificados anteriores
+  sudo rm -Rf .docker/nginx/certs/demo.test.*
+  # Creo un certificado auto firmado para *.demo.test
+  "${DOCKER_COMPOSE[@]}" run --rm nginx sh -c "cd /etc/nginx/certs && touch openssl.cnf && cat /etc/ssl1.1/openssl.cnf > openssl.cnf && echo \"\" >> openssl.cnf && echo \"[ SAN ]\" >> openssl.cnf && echo \"subjectAltName=DNS.1:demo.test,DNS.2:*.demo.test\" >> openssl.cnf && openssl req -x509 -sha256 -nodes -newkey rsa:4096 -keyout demo.test.key -out demo.test.crt -days 3650 -subj \"/CN=*.demo.test\" -config openssl.cnf -extensions SAN && rm openssl.cnf"
+}
+
+# Install the certificate
+cert_install () {
+
+    # Instalo certificados según el tipo de SO, solo soporta Mac y derivados de Debian, el resto deberá ser instalado manualmente
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain .docker/nginx/certs/demo.test.crt
+    elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+
+        # Si había un certificado presente, lo elimino
+        sudo rm -f /usr/local/share/ca-certificates/demo.test.crt
+        # Instalo el certificado creado anteriormente
+        sudo ln -s "$(pwd)/.docker/nginx/certs/demo.test.crt" /usr/local/share/ca-certificates/demo.test.crt
+        sudo update-ca-certificates
+        # Me instalo a mi mismo como autoridad certificante en el navegador para poder utilizar mi certificado autofirmado
+        # https://unix.stackexchange.com/a/90607
+        certutil -d sql:"$HOME/.pki/nssdb" -A -t "C,," -n "My Homemade CA" -i "$(pwd)/.docker/nginx/certs/demo.test.crt"
+    else
+        echo "Could not install the certificate on the host machine, please do it manually"
+    fi
+}
+
 # Run a Composer command
 composer () {
     "${DOCKER_COMPOSE[@]}" run --rm backend composer "${@:1}"
@@ -73,7 +104,18 @@ init () {
         && build \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" frontend \
-        && start
+
+    # Si no había certificados generados, los instalo
+    if [ ! -f .docker/nginx/certs/demo.test.crt ]; then
+        cert_generate
+    fi
+
+    # Inicio e instalo certificados
+    start && cert_install
+
+    printf "\n\nSi el navegador estaba abierto deberá reiniciarlo"
+
+    printf "\n\nA continuación podrá ingresar al sitio desde la siguiente URL: https://backend.demo.test \n\n"
 }
 
 # Display and tail the logs of all containers or the specified one's
@@ -146,6 +188,30 @@ case "$1" in
     build)
         build "${@:2}"
         ;;
+    cert)
+        case "$2" in
+            generate)
+                cert_generate
+                ;;
+            install)
+                cert_install
+                ;;
+            *)
+                cat << EOF
+
+Certificate management commands.
+
+Usage:
+    demo cert <command>
+
+Available commands:
+    generate .................................. Generate a new certificate
+    install ................................... Install the certificate
+
+EOF
+                ;;
+        esac
+        ;;
     composer)
         composer "${@:2}"
         ;;
@@ -187,6 +253,9 @@ Usage:
 Available commands:
     artisan ................................... Run an Artisan command
     build [image] ............................. Build all of the images or the specified one
+    cert ...................................... Certificate management commands
+            generate .............................. Generate a new certificate
+            install ............................... Install the certificate
     composer .................................. Run a Composer command
     destroy ................................... Remove the entire Docker environment
     down [-v] ................................. Stop and destroy all containers
