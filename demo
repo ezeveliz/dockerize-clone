@@ -42,7 +42,6 @@ cert_install () {
 
         # Si había un certificado presente, lo elimino
         sudo rm -f /usr/local/share/ca-certificates/demo.test.crt
-        sudo rm -f /usr/local/share/ca-certificates/demo.test.key
         # Instalo el certificado creado anteriormente
         sudo ln -s "$(pwd)/.docker/nginx/certs/demo.test.crt" /usr/local/share/ca-certificates/demo.test.crt
         sudo update-ca-certificates
