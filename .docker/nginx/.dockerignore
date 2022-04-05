@@ -1,0 +1,3 @@
+# La linea de aca abajo omite enviar los certificados ssl al contexto durante la etapa de build
+# Por alguna razon fallaba la etapa de build, si los mismos estaban presentes,
+*/demo.test*
