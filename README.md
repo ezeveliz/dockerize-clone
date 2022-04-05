@@ -21,6 +21,8 @@ Ambiente de desarrollo basado en Docker para [Arbil](https://arbil.com.ar/)
 * ```demo init``` Inicializa el sistema, clona el repo de desarrollo y descarga las imágenes de los contenedores
 * ```demo stop``` Apaga el sistema 
 * ```demo start``` Inicia el sistema
+* ```demo npm run production``` Compila los assets de JS y SASS
+* ```demo npm run watch``` Compila los assets de JS y SASS a medida que se van modificando
 * ```demo``` Lista todos los comandos disponibles en el script
 
 ### Sistema resultante
