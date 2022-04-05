@@ -4,8 +4,7 @@ version: '3.8'
 services:
 
   nginx:
-    build:
-      context: ./.docker/nginx
+    build: ./.docker/nginx
     ports:
       - "80:80"
       - "443:443"

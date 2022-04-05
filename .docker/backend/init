@@ -1,40 +1,17 @@
 #!/bin/bash
 
+UPDATE_APP_KEY=false
+
+# Si no está presente el .env, utilizo el que viene de ejemplo y seteo la vble para auto generar la APP_KEY
+if [ ! -f "/var/www/backend/.env" ]; then
+    cp "/var/www/backend/.env.example" "/var/www/backend/.env"
+    UPDATE_APP_KEY=true
+fi
+
 # Instalo las dependencias de composer
 composer install -d "/var/www/backend"
 
-# Si no está presente el .env, lo creo
-if [ ! -f "/var/www/backend/.env" ]; then
-    # Create .env file
-    cat > "/var/www/backend/.env" << EOF
-APP_NAME=Arbil
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=https://backend.demo.test
-APP_DOCS=https://docs.arbil.com.ar
-
-LOG_CHANNEL=stack
-LOG_LEVEL=debug
-
-DB_CONNECTION=pgsql
-DB_HOST=postgres
-DB_DATABASE=arbil
-DB_USERNAME=arbil
-DB_PASSWORD=2522
-
-BROADCAST_DRIVER=log
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
-SESSION_DRIVER=redis
-SESSION_LIFETIME=120
-
-REDIS_CLIENT=predis
-REDIS_HOST=redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-EOF
-
-    # Genero la app_key
+# Si la vble para setear la app_key estaba en true, la genero
+if [ $UPDATE_APP_KEY ]; then
     php "/var/www/backend/artisan" key:generate --ansi
 fi
