@@ -174,7 +174,7 @@ install_script () {
     echo 'export HOST_UID=$(id -u)'
     echo "$inicio$path$fin"
 
-    printf "\nAhora guarda los cambios, cerra el archivo ~/.bashrc y la terminal, luego volvé a abrirla y ejecutá \"demo init\" para continuar"
+    printf "\nAhora guarda los cambios, cerra el archivo ~/.bashrc y la terminal, luego volvé a abrirla y ejecutá \"demo init\" para continuar \n\n"
 }
 
 #######################################
