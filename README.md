@@ -9,7 +9,7 @@ Ambiente de desarrollo basado en Docker para [Arbil](https://arbil.com.ar/)
 * Instalar: [docker](https://docs.docker.com/engine/install/ubuntu/) siguiendo los pasos de postInstall para poder ejecutar sin necesitar elevar los privilegios, [docker-compose](https://docs.docker.com/compose/install/), certutil(sudo apt install libnss3-tools)
 
 ### Instrucciones
-* Editar el archivo [hosts](https://linuxize.com/post/how-to-edit-your-hosts-file/) agregando el dominio demo.backend.test al final de la línea de localhost(127.0.0.1)
+* Editar el archivo [hosts](https://linuxize.com/post/how-to-edit-your-hosts-file/) agregando el dominio backend.demo.test al final de la línea de localhost(127.0.0.1)
 * Para iniciar, clonar este repo, ingresar al directorio y ejecutar:
  ``` ./demo install-script ```
 * Luego de realizar lo solicitado por el paso anterior ejecutar:
