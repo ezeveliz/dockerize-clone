@@ -6,7 +6,7 @@ Ambiente de desarrollo basado en Docker para [Arbil](https://arbil.com.ar/)
 
 * Preferentemente el OS Host debe ser un derivado de Debian(por las instrucciones del script).
 * Leer [esto](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories), indica como ingresar y cachear las credenciales para el repo de desarrollo, prestar especial énfasis en la sección sobre HTTPS, ya que es el método utilizado en el script.
-* Instalar: docker, docker-compose, certutil
+* Instalar: [docker](https://docs.docker.com/engine/install/ubuntu/) siguiendo los pasos de postInstall para poder ejecutar sin necesitar elevar los privilegios, [docker-compose](https://docs.docker.com/compose/install/), certutil(sudo apt install libnss3-tools)
 
 ### Instrucciones
 * Editar el archivo [hosts](https://linuxize.com/post/how-to-edit-your-hosts-file/) agregando el dominio demo.backend.test al final de la línea de localhost(127.0.0.1)
