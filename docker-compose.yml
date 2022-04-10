@@ -46,7 +46,7 @@ services:
     working_dir: /var/www/backend
     restart: unless-stopped
     ports:
-      - 5433:5432
+      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: 2522
       POSTGRES_DB: dummy-db
