@@ -18,18 +18,35 @@ services:
   backend:
     build:
       context: "./src/${BACKEND_REPO}"
+      # la línea de abajo indica que etapa del dockerfile se usa como imagen base
+      target: backend
       args:
         HOST_UID: $HOST_UID
     working_dir: /var/www/backend
     volumes:
       - "./src/${BACKEND_REPO}:/var/www/backend"
+      # El código que está en el directorio de la izquierda se va a montar en el directorio de la derecha del contenedor
       - ./.docker/backend/init:/opt/files/init
+      # Monto el script de inicialización del backend
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_started
 
+  worker:
+    build:
+      context: "./src/${BACKEND_REPO}"
+      target: worker
+      args:
+        HOST_UID: $HOST_UID
+    working_dir: /var/www/backend
+    volumes:
+      - "./src/${BACKEND_REPO}:/var/www/backend"
+    depends_on:
+      - backend
+
+  # Este servicio se usa solamente para compilar el frontend y no ensuciar el contenedor del backend
   frontend:
     build:
       context: "./src/${BACKEND_REPO}/.dck.frontend"
@@ -47,6 +64,7 @@ services:
     restart: unless-stopped
     ports:
       - "5433:5432"
+      # Expongo el puerto 5433 en localhost para ciertas integraciones como phpstorm
     environment:
       POSTGRES_PASSWORD: 2522
       POSTGRES_DB: dummy-db
