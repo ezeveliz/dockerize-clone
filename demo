@@ -134,6 +134,8 @@ restart () {
 # Start the containers
 start () {
     "${DOCKER_COMPOSE[@]}" up -d
+
+    printf "\n\nA continuación podrá ingresar al sitio desde la siguiente URL: https://backend.demo.test \n\n"
 }
 
 # Stop the containers
