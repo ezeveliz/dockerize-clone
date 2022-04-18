@@ -19,7 +19,7 @@ artisan () {
 
 # Build all of the images or the specified one
 build () {
-    "${DOCKER_COMPOSE[@]}" build "${@:1}"
+    DOCKER_BUILDKIT=1 "${DOCKER_COMPOSE[@]}" build "${@:1}"
 }
 
 # Generate a wildcard certificate
@@ -148,10 +148,10 @@ update () {
 
     repositories \
         && git pull \
-        && build \
-        && composer install \
+        && build --pull\
+        && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
         && artisan migrate \
-        && npm install \
+        && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" frontend \
         && start
 }
 
