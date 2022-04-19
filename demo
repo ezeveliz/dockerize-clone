@@ -111,7 +111,7 @@ init () {
     fi
 
     # Inicio e instalo certificados
-    start && cert_install
+    start --dont-print  && cert_install
 
     printf "\n\nSi el navegador estaba abierto deberá reiniciarlo"
 
@@ -135,7 +135,9 @@ restart () {
 start () {
     "${DOCKER_COMPOSE[@]}" up -d
 
-    printf "\n\nA continuación podrá ingresar al sitio desde la siguiente URL: https://backend.demo.test \n\n"
+    if [[ "$1" != "--dont-print" ]]; then
+        printf "\nA continuación podrá ingresar al sitio desde la siguiente URL: https://backend.demo.test \n\n"
+    fi
 }
 
 # Stop the containers
@@ -152,7 +154,7 @@ update () {
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
         && artisan migrate \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" frontend \
-        && start
+        && restart
 }
 
 # Run a npm command
