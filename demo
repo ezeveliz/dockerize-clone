@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Define Docker Compose command prefix...
+# Existe tanto "docker compose" como "docker-compose", de esta manera detecto y utilizo el correspondiente
 if [ -x "$(command -v docker-compose)" ]; then
     DOCKER_COMPOSE=(docker-compose)
 else
@@ -49,7 +49,7 @@ cert_install () {
         # https://unix.stackexchange.com/a/90607
         certutil -d sql:"$HOME/.pki/nssdb" -A -t "C,," -n "My Homemade CA" -i "$(pwd)/.docker/nginx/certs/demo.test.crt"
     else
-        echo "Could not install the certificate on the host machine, please do it manually"
+        echo "Solo puedo instalar el certificado SSL en SSOO derivados de Debian o Mac, vas a tener que instalarlo manualmente"
     fi
 }
 
@@ -203,14 +203,14 @@ case "$1" in
             *)
                 cat << EOF
 
-Certificate management commands.
+Comandos de administración de certificados.
 
-Usage:
-    demo cert <command>
+Uso:
+    demo cert <comando>
 
-Available commands:
-    generate .................................. Generate a new certificate
-    install ................................... Install the certificate
+Comandos disponibles:
+    generate .................................. Generar un certificado nuevo
+    install ................................... Instalar el certificado
 
 EOF
                 ;;
@@ -251,28 +251,33 @@ EOF
         ;;
     *)
         cat << EOF
-Command line interface for the Docker-based web development environment demo.
-Usage:
-    demo <command> [options] [arguments]
-Available commands:
-    artisan ................................... Run an Artisan command
-    build [image] ............................. Build all of the images or the specified one
-    cert ...................................... Certificate management commands
-            generate .............................. Generate a new certificate
-            install ............................... Install the certificate
-    composer .................................. Run a Composer command
-    destroy ................................... Remove the entire Docker environment
-    down [-v] ................................. Stop and destroy all containers
-                                                Options:
-                                                    -v .................... Destroy the volumes as well
-    init ...................................... Initialise the Docker environment and the application
-    logs [container] .......................... Display and tail the logs of all containers or the specified one's
-    restart ................................... Restart the containers
-    start ..................................... Start the containers
-    stop ...................................... Stop the containers
-    update .................................... Update the Docker environment
-    npm ....................................... Run a npm command
-    install-script ............................ Print commands to install demo script
+Interfaz de línea de comandos para el ambiente de desarrollo de Arbil basado en Docker
+Uso:
+    demo <comando> [opciones] [argumentos]
+Comandos disponibles:
+    install-script ............................ Mostrar instrucciones para instalar el script
+    init ...................................... Inicializar el ambiente de Docker y la aplicación(puede tardar unos minutos)
+    start ..................................... Iniciar los contenedores
+    stop ...................................... Detener los contenedores
+    restart ................................... Reiniciar los contenedores
+    update .................................... Actualizar el ambiente de Docker
+
+    build [image] ............................. Construir todas las imágenes o la especificada(por si se hace alguna modificación en algún Dockerfile)
+
+    down [-v] ................................. Detener y destruir los contenedores
+                                                    Opciones:
+                                                        -v .................... También destruir los volúmenes
+    destroy ................................... Remover todo el ambiente de docker
+
+    logs [container] .......................... Mostrar y seguir los logs de todos los contenedores o del especificado
+
+    composer .................................. Ejecutar un comando de Composer
+    artisan ................................... Ejecutar un comando de Artisan
+    npm ....................................... Ejecutar un comando de npm
+
+    cert ...................................... Comandos de administración de certificados
+                generate .............................. Generar un certificado nuevo
+                install ............................... Instalar el certificado
 EOF
         exit
         ;;
