@@ -151,6 +151,7 @@ update () {
     repositories \
         && git pull \
         && build --pull\
+        && docker image prune -f \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" backend \
         && artisan migrate \
         && "${DOCKER_COMPOSE[@]}" run --rm --entrypoint="//opt/files/init" frontend \
