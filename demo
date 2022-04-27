@@ -158,6 +158,11 @@ update () {
         && restart
 }
 
+# Display state
+state () {
+    "${DOCKER_COMPOSE[@]}" ps
+}
+
 # Run a npm command
 npm () {
     "${DOCKER_COMPOSE[@]}" run --rm frontend npm "${@:1}"
@@ -244,6 +249,9 @@ EOF
     update)
         update
         ;;
+    state)
+        state
+        ;;
     npm)
         npm "${@:2}"
         ;;
@@ -262,6 +270,7 @@ Comandos disponibles:
     stop ...................................... Detener los contenedores
     restart ................................... Reiniciar los contenedores
     update .................................... Actualizar el ambiente de Docker
+    state ..................................... Muestra el estado actual, ejecutando o no
 
     build [image] ............................. Construir todas las imágenes o la especificada(por si se hace alguna modificación en algún Dockerfile)
 
