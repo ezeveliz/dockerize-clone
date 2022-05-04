@@ -53,6 +53,11 @@ cert_install () {
     fi
 }
 
+# Run a PHP command
+php () {
+    "${DOCKER_COMPOSE[@]}" run --rm backend php "${@:1}"
+}
+
 # Run a Composer command
 composer () {
     "${DOCKER_COMPOSE[@]}" run --rm backend composer "${@:1}"
@@ -222,6 +227,9 @@ EOF
                 ;;
         esac
         ;;
+    php)
+        php "${@:2}"
+        ;;
     composer)
         composer "${@:2}"
         ;;
@@ -281,6 +289,7 @@ Comandos disponibles:
 
     logs [container] .......................... Mostrar y seguir los logs de todos los contenedores o del especificado
 
+    php ....................................... Ejecutar un script de PHP
     composer .................................. Ejecutar un comando de Composer
     artisan ................................... Ejecutar un comando de Artisan
     npm ....................................... Ejecutar un comando de npm
