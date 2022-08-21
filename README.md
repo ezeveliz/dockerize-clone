@@ -5,16 +5,22 @@ Ambiente de desarrollo basado en Docker para [Arbil](https://arbil.com.ar/)
 ### Prerequisitos
 
 * Preferentemente el OS Host debe ser un derivado de Debian(por las instrucciones del script).
-* Leer [esto](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories), indica como ingresar y cachear las credenciales para el repo de desarrollo, prestar especial énfasis en la sección sobre HTTPS, ya que es el método utilizado en el script.
 * Instalar: [docker](https://docs.docker.com/engine/install/ubuntu/) siguiendo los pasos de postInstall para poder ejecutar sin necesitar elevar los privilegios, [docker-compose](https://docs.docker.com/compose/install/), certutil(sudo apt install libnss3-tools)
+* Instalar: [gh](https://github.com/cli/cli/blob/trunk/docs/install_linux.md) para autenticarse con las credenciales de github de manera segura.
+* Ejecutar ```gh auth login``` para autenticarse, elegir las siguientes opciones a medida que se piden: Github.com, HTTPS, Y, Login with a web browser
 
 ### Instrucciones
-* Editar el archivo [hosts](https://linuxize.com/post/how-to-edit-your-hosts-file/) agregando el dominio backend.demo.test al final de la línea de localhost(127.0.0.1)
-* Para iniciar, clonar este repo, ingresar al directorio y ejecutar:
- ``` ./demo install-script ```
-* Luego de realizar lo solicitado por el paso anterior ejecutar:
-  ``` demo init ```
-  (si no se hizo ya), este paso inicial puede demorar varios minutos, ya que debe inicializar el repositorio de desarrollo, bajar y compilar todas las imágenes del sistema y generar e instalar los certificados SSL. En el medio se le pedirán las credenciales para acceder al repo de desarrollo y su contraseña de superusuario. Al finalizar le indicará la URL de acceso.
+* Editar el archivo [hosts](https://linuxize.com/post/how-to-edit-your-hosts-file/) agregando el dominio ```backend.demo.test``` al final de la línea de localhost(127.0.0.1)
+* Para iniciar, clonar este repo, ingresar al directorio y ejecutar: ``` ./demo install-script ```, al ejecutarlo se imprimen un par de instrucciones extra.
+* Cerrar TODAS las terminales abiertas, volverlas a abrir y continuar con el paso siguiente.
+* Luego de realizar lo solicitado por el paso anterior ejecutar: ``` demo init ```
+  (si no se hizo ya), este paso inicial puede demorar varios minutos, ya que debe inicializar el repositorio de desarrollo, bajar y compilar todas las imágenes del sistema y generar e instalar los certificados SSL. En el medio se le pedirá su contraseña de superusuario. Al finalizar le indicará la URL de acceso. 
+
+  Si al ejecutar este paso surge un error como el siguiente:
+  ```
+  Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
+  ```
+  reiniciar la PC y volver a ejecutar el mismo comando.
 * Finalmente el directorio de desarrollo se encuentra en /src/arbil
 
 ### Comandos más importantes
